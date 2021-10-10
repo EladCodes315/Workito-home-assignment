@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "768863501996",
+    "project_id": "homeassignment-c97a0",
+    "storage_bucket": "homeassignment-c97a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768863501996:android:a5faa88f2f3a73b9a76909",
+        "android_client_info": {
+          "package_name": "com.workito.homeassignment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768863501996-47hv9ekm41g14sksq76f7qq8tmo70g0f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtdM0SDpp6hn4LeiJwTVZ5frVaXwldIZs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768863501996-47hv9ekm41g14sksq76f7qq8tmo70g0f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
