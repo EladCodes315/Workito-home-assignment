@@ -15,17 +15,17 @@ function RegisterScreen({ navigation }){
 
 	return (
 		<View style={styles.container}>
-			<Text style={[ styles.header, styles.setColorToWhite ]}>Register</Text>
+			<Text style={styles.header}>Register</Text>
 			<View style={styles.inputs}>
 				<View>
-					<Text style={styles.setColorToWhite}>Email</Text>
+					<Text style>Email</Text>
 					<TextInput style={styles.inputBackground} value={email} onChangeText={text => setEmail(text)} />
 				</View>
 				<View>
-					<Text style={styles.setColorToWhite}>Password</Text>
+					<Text>Password</Text>
 					<TextInput style={styles.inputBackground} value={password} onChangeText={text => setPassword(text)} secureTextEntry />
 				</View>
-				<Text style={styles.setColorToWhite}>
+				<Text>
 					Already have an account?{' '}
 					<Text style={styles.link} onPress={() => navigation.replace('Login')}>
 						Sign In!
@@ -34,7 +34,7 @@ function RegisterScreen({ navigation }){
 			</View>
 			<View>
 				<TouchableOpacity onPress={handleSignUp} style={styles.button}>
-					<Text>Sign Up</Text>
+					<Text style={{ color: 'dodgerblue' }}>Sign Up</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -44,8 +44,8 @@ function RegisterScreen({ navigation }){
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: 'dodgerblue',
-		justifyContent: 'space-between'
+		backgroundColor: '#fff',
+		justifyContent: 'space-around'
 	},
 	header: {
 		alignSelf: 'center',
@@ -59,11 +59,8 @@ const styles = StyleSheet.create({
 		marginRight: 'auto',
 		justifyContent: 'space-between'
 	},
-	setColorToWhite: {
-		color: '#fff'
-	},
 	inputBackground: {
-		backgroundColor: '#fff',
+		backgroundColor: '#eee',
 		width: '100%',
 		height: 40,
 		borderRadius: 10
@@ -72,11 +69,13 @@ const styles = StyleSheet.create({
 		color: 'blue'
 	},
 	button: {
-		backgroundColor: 'green',
-		height: 70,
-		width: '100%',
+		backgroundColor: '#eee',
+		height: 60,
+		width: '50%',
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignSelf: 'center',
+		alignItems: 'center',
+		borderRadius: 30
 	}
 });
 

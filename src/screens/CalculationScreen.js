@@ -3,7 +3,7 @@ import { Alert, Picker, StyleSheet, Text, TextInput, TouchableOpacity, View } fr
 import { auth, db } from '../../firebase';
 import RadioButton from '../components/RadioButton';
 
-function CalculationScreen({ navigation }){
+function CalculationScreen(){
 	const [ employee, setEmployee ] = useState('');
 	const [ employeesArr, setEmployeesArr ] = useState([]);
 	const [ veterancyStr, setVeterancyStr ] = useState('');
@@ -12,18 +12,36 @@ function CalculationScreen({ navigation }){
 	const [ calculation, setCalculation ] = useState(0);
 
 	useEffect(() => {
-		db
-			.get()
-			.then(snapshot => {
+		const query = db.where('userId', '==', auth.currentUser.uid);
+
+		const observer = query.onSnapshot(
+			querySnapshot => {
 				let arr = [];
-				snapshot.forEach(doc => {
-					if (doc.data().userId === auth.currentUser.uid) {
-						arr.push(doc.data().name);
+				querySnapshot.docs.forEach(docSnapshot => {
+					if (docSnapshot.data().userId === auth.currentUser.uid) {
+						arr.push(docSnapshot.data().name);
 					}
 				});
 				setEmployeesArr(arr);
-			})
-			.catch(err => console.log(err));
+			},
+			err => {
+				console.log(`Encountered error: ${err}`);
+			}
+		);
+
+		return observer;
+		// db
+		// 	.get()
+		// 	.then(snapshot => {
+		// 		let arr = [];
+		// 		snapshot.forEach(doc => {
+		// 			if (doc.data().userId === auth.currentUser.uid) {
+		// 				arr.push(doc.data().name);
+		// 			}
+		// 		});
+		// 		setEmployeesArr(arr);
+		// 	})
+		// 	.catch(err => console.log(err));
 	}, []);
 
 	const handleCalculation = () => {
@@ -117,13 +135,17 @@ function CalculationScreen({ navigation }){
 
 	return (
 		<View style={styles.container}>
-			<Text style={[ styles.header, styles.setColorToWhite ]}>Calculate</Text>
-			<Picker selectedValue={employee} style={[ { height: 50, width: 150 }, styles.setColorToWhite ]} onValueChange={emp => setEmployee(emp)}>
-				{employeesArr.map((emp, index) => <Picker.Item key={index} label={emp} value={emp} />)}
-			</Picker>
+			<Text style={styles.header}>Calculate</Text>
+
 			<View style={styles.inputs}>
+				<View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+					<Text>Employee </Text>
+					<Picker selectedValue={employee} style={styles.picker} onValueChange={emp => setEmployee(emp)}>
+						{employeesArr.map((emp, index) => <Picker.Item key={index} label={emp} value={emp} />)}
+					</Picker>
+				</View>
 				<View>
-					<Text style={styles.setColorToWhite}>Veterancy</Text>
+					<Text>Veterancy</Text>
 					<TextInput
 						style={styles.inputBackground}
 						keyboardType="numeric"
@@ -131,8 +153,8 @@ function CalculationScreen({ navigation }){
 						onChangeText={text => setVeterancyStr(text)}
 					/>
 				</View>
-				<View style={{ alignItems: 'flex-end', height: 100, justifyContent: 'space-between' }}>
-					<Text style={styles.setColorToWhite}>Job Description</Text>
+				<View style={styles.radioButtons}>
+					<Text>Job Description</Text>
 					<TouchableOpacity
 						style={{ flexDirection: 'row-reverse' }}
 						onPress={() => {
@@ -142,7 +164,7 @@ function CalculationScreen({ navigation }){
 						}}
 					>
 						<RadioButton selected={jobDescription === 'permanant-weekly-hours'} />
-						<Text style={styles.setColorToWhite}>Permanant Weekly Hours</Text>
+						<Text> Permanant Weekly Hours</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={{ flexDirection: 'row-reverse' }}
@@ -153,7 +175,7 @@ function CalculationScreen({ navigation }){
 						}}
 					>
 						<RadioButton selected={jobDescription === 'permanant-monthly-hours'} />
-						<Text style={styles.setColorToWhite}>Permanant Monthly Hours</Text>
+						<Text> Permanant Monthly Hours</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={{ flexDirection: 'row-reverse' }}
@@ -164,14 +186,14 @@ function CalculationScreen({ navigation }){
 						}}
 					>
 						<RadioButton selected={jobDescription === 'changing-hours'} />
-						<Text style={styles.setColorToWhite}>Changing Hours</Text>
+						<Text> Changing Hours</Text>
 					</TouchableOpacity>
 				</View>
 				{jobDescription === '' ? (
-					<View />
+					<View style={{ height: 50 }} />
 				) : (
 					<View>
-						<Text style={styles.setColorToWhite}>
+						<Text>
 							{jobDescription === 'permanant-weekly-hours' ? (
 								'Number of Hours Working in a week'
 							) : jobDescription === 'permanant-monthly-hours' ? (
@@ -185,20 +207,15 @@ function CalculationScreen({ navigation }){
 				)}
 			</View>
 			{calculation === 0 ? (
-				<View />
+				<View style={styles.payment} />
 			) : (
-				<View>
-					<Text style={styles.setColorToWhite}>The required payment is: {Math.floor(calculation)}</Text>
+				<View style={styles.payment}>
+					<Text>The required payment is: {Math.floor(calculation)}</Text>
 				</View>
 			)}
-			<View style={styles.buttons}>
-				<TouchableOpacity onPress={handleCalculation} style={styles.button}>
-					<Text>Calculate</Text>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={() => navigation.replace('Welcome')} style={[ styles.button, { backgroundColor: 'red' } ]}>
-					<Text>Back</Text>
-				</TouchableOpacity>
-			</View>
+			<TouchableOpacity onPress={handleCalculation} style={styles.button}>
+				<Text style={{ color: 'dodgerblue' }}>Calculate</Text>
+			</TouchableOpacity>
 		</View>
 	);
 }
@@ -206,14 +223,13 @@ function CalculationScreen({ navigation }){
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: 'dodgerblue',
-		justifyContent: 'space-between',
+		backgroundColor: '#fff',
+		justifyContent: 'space-evenly',
 		alignItems: 'center'
 	},
 	header: {
 		alignSelf: 'center',
-		fontSize: 40,
-		marginTop: 70
+		fontSize: 40
 	},
 	inputs: {
 		width: '70%',
@@ -222,27 +238,34 @@ const styles = StyleSheet.create({
 		marginRight: 'auto',
 		justifyContent: 'space-between'
 	},
-	setColorToWhite: {
-		color: '#fff'
+	picker: {
+		height: 50,
+		width: 150,
+		alignSelf: 'center'
 	},
 	inputBackground: {
-		backgroundColor: '#fff',
+		backgroundColor: '#eee',
 		width: '100%',
 		height: 40,
 		borderRadius: 10
 	},
-	link: {
-		color: 'blue'
-	},
-	buttons: {
-		flexDirection: 'row'
+	radioButtons: {
+		alignItems: 'flex-end',
+		height: 100,
+		justifyContent: 'space-between'
 	},
 	button: {
-		backgroundColor: 'green',
-		height: 70,
+		backgroundColor: '#eee',
+		height: 60,
 		width: '50%',
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignSelf: 'center',
+		alignItems: 'center',
+		borderRadius: 30
+	},
+	payment: {
+		position: 'absolute',
+		bottom: 100
 	}
 });
 

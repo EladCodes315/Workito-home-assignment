@@ -9,7 +9,7 @@ function LoginScreen({ navigation }){
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged(user => {
 			if (user) {
-				navigation.replace('Welcome');
+				navigation.replace('WelcomeNav');
 			}
 		});
 		return unsubscribe;
@@ -18,23 +18,23 @@ function LoginScreen({ navigation }){
 	const handleSignIn = () => {
 		auth
 			.signInWithEmailAndPassword(email, password)
-			.then(() => navigation.replace('Welcome'))
+			.then(() => navigation.navigate('WelcomeNav'))
 			.catch(() => Alert.alert('Error', 'Something went wrong'));
 	};
 
 	return (
 		<View style={styles.container}>
-			<Text style={[ styles.header, styles.setColorToWhite ]}>Login</Text>
+			<Text style={styles.header}>Login</Text>
 			<View style={styles.inputs}>
 				<View>
-					<Text style={styles.setColorToWhite}>Email</Text>
+					<Text>Email</Text>
 					<TextInput style={styles.inputBackground} value={email} onChangeText={text => setEmail(text)} />
 				</View>
 				<View>
-					<Text style={styles.setColorToWhite}>Password</Text>
+					<Text>Password</Text>
 					<TextInput style={styles.inputBackground} value={password} onChangeText={text => setPassword(text)} secureTextEntry />
 				</View>
-				<Text style={styles.setColorToWhite}>
+				<Text>
 					Dont have an account?{' '}
 					<Text style={styles.link} onPress={() => navigation.replace('Register')}>
 						Sign Up!
@@ -43,7 +43,7 @@ function LoginScreen({ navigation }){
 			</View>
 			<View>
 				<TouchableOpacity onPress={handleSignIn} style={styles.button}>
-					<Text>Sign In</Text>
+					<Text style={{ color: 'dodgerblue' }}>Sign In</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -53,8 +53,8 @@ function LoginScreen({ navigation }){
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: 'dodgerblue',
-		justifyContent: 'space-between'
+		backgroundColor: '#fff',
+		justifyContent: 'space-around'
 	},
 	header: {
 		alignSelf: 'center',
@@ -68,11 +68,8 @@ const styles = StyleSheet.create({
 		marginRight: 'auto',
 		justifyContent: 'space-between'
 	},
-	setColorToWhite: {
-		color: '#fff'
-	},
 	inputBackground: {
-		backgroundColor: '#fff',
+		backgroundColor: '#eee',
 		width: '100%',
 		height: 40,
 		borderRadius: 10
@@ -81,11 +78,13 @@ const styles = StyleSheet.create({
 		color: 'blue'
 	},
 	button: {
-		backgroundColor: 'green',
-		height: 70,
-		width: '100%',
+		backgroundColor: '#eee',
+		height: 60,
+		width: '50%',
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignSelf: 'center',
+		alignItems: 'center',
+		borderRadius: 30
 	}
 });
 

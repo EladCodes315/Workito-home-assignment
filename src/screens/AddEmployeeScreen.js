@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { auth, db } from '../../firebase';
 
-function AddEmployeeScreen({ navigation }){
+function AddEmployeeScreen(){
 	const [ name, setName ] = useState('');
 	const [ employeeId, setEmployeeId ] = useState('');
 
@@ -11,6 +11,9 @@ function AddEmployeeScreen({ navigation }){
 			Alert.alert('Missing Values', 'One or more of the fields is Empty');
 		}
 		else {
+			// else if () {
+
+			// }
 			db
 				.get()
 				.then(snapshot => {
@@ -26,41 +29,31 @@ function AddEmployeeScreen({ navigation }){
 								name,
 								userId: auth.currentUser.uid
 							})
-							.then(() => navigation.replace('Welcome'))
-							.catch(() =>
-								Alert.alert('Error', 'Something went wrong', [ { text: 'Back', onPress: () => navigation.replace('Welcome') } ])
-							);
+							.then(() => Alert.alert('Success', 'Employee added successfully!'))
+							.catch(() => Alert.alert('Error', 'Something went wrong'));
 					}
 				})
-				.catch(() =>
-					Alert.alert('Error', 'Something went wrong when fetching data', [
-						{ text: 'Back', onPress: () => navigation.replace('Welcome') }
-					])
-				);
+				.catch(() => Alert.alert('Error', 'Something went wrong when fetching data'));
 		}
 	};
 
 	return (
 		<View style={styles.container}>
-			<Text style={[ styles.header, styles.setColorToWhite ]}>Add</Text>
+			<Text style={styles.header}>Add Employee</Text>
 			<View style={styles.inputs}>
 				<View>
-					<Text style={styles.setColorToWhite}>Full Name</Text>
+					<Text>Full Name</Text>
 					<TextInput style={styles.inputBackground} value={name} onChangeText={text => setName(text)} />
 				</View>
 				<View>
-					<Text style={styles.setColorToWhite}>ID</Text>
+					<Text>ID</Text>
 					<TextInput style={styles.inputBackground} keyboardType="numeric" value={employeeId} onChangeText={text => setEmployeeId(text)} />
 				</View>
 			</View>
-			<View style={styles.buttons}>
-				<TouchableOpacity onPress={handleAddition} style={styles.button}>
-					<Text>Add</Text>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={() => navigation.replace('Welcome')} style={[ styles.button, { backgroundColor: 'red' } ]}>
-					<Text>Back</Text>
-				</TouchableOpacity>
-			</View>
+
+			<TouchableOpacity onPress={handleAddition} style={styles.button}>
+				<Text style={{ color: 'dodgerblue' }}>Add</Text>
+			</TouchableOpacity>
 		</View>
 	);
 }
@@ -68,8 +61,8 @@ function AddEmployeeScreen({ navigation }){
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: 'dodgerblue',
-		justifyContent: 'space-between'
+		backgroundColor: '#fff',
+		justifyContent: 'space-around'
 	},
 	header: {
 		alignSelf: 'center',
@@ -83,27 +76,20 @@ const styles = StyleSheet.create({
 		marginRight: 'auto',
 		justifyContent: 'space-between'
 	},
-	setColorToWhite: {
-		color: '#fff'
-	},
 	inputBackground: {
-		backgroundColor: '#fff',
+		backgroundColor: '#eee',
 		width: '100%',
 		height: 40,
 		borderRadius: 10
 	},
-	link: {
-		color: 'blue'
-	},
-	buttons: {
-		flexDirection: 'row'
-	},
 	button: {
-		backgroundColor: 'green',
-		height: 70,
+		backgroundColor: '#eee',
+		height: 60,
 		width: '50%',
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignSelf: 'center',
+		alignItems: 'center',
+		borderRadius: 30
 	}
 });
 

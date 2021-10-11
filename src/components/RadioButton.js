@@ -10,7 +10,7 @@ function RadioButton({ selected }){
 						height: 12,
 						width: 12,
 						borderRadius: 6,
-						backgroundColor: '#fff'
+						backgroundColor: '#eee'
 					}}
 				/>
 			) : null}
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 		width: 24,
 		borderRadius: 12,
 		borderWidth: 2,
-		borderColor: '#fff',
+		borderColor: '#eee',
 		alignItems: 'center',
 		justifyContent: 'center'
 	}

@@ -4,31 +4,16 @@ import { auth } from '../../firebase';
 
 function WelcomeScreen({ navigation }){
 	const handleSignOut = () => {
-		auth.signOut().then(() => navigation.replace('Login')).catch(() => Alert.alert('Error', 'Something went wrong'));
-	};
-
-	const startCalculating = () => {
-		navigation.replace('Calculation');
-	};
-
-	const addEmployee = () => {
-		navigation.replace('AddEmployee');
+		auth.signOut().then(() => navigation.navigate('Login')).catch(() => Alert.alert('Error', 'Something went wrong'));
 	};
 
 	return (
-		<View style={[ styles.container ]}>
-			<Text style={[ styles.header, styles.setColorToWhite ]}>Welcome!</Text>
-			<View style={styles.alignButtons}>
-				<TouchableOpacity onPress={startCalculating} style={styles.button}>
-					<Text>Calculate Recovery Days</Text>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={addEmployee} style={{ ...styles.button, backgroundColor: 'red' }}>
-					<Text>Add Employee</Text>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={handleSignOut} style={styles.button}>
-					<Text>Logout</Text>
-				</TouchableOpacity>
-			</View>
+		<View style={styles.container}>
+			<Text style={styles.header}>Welcome!</Text>
+
+			<TouchableOpacity onPress={handleSignOut} style={styles.button}>
+				<Text style={styles.buttonText}>Logout</Text>
+			</TouchableOpacity>
 		</View>
 	);
 }
@@ -36,26 +21,25 @@ function WelcomeScreen({ navigation }){
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: 'dodgerblue',
-		justifyContent: 'space-between'
+		backgroundColor: '#fff',
+		justifyContent: 'space-around'
 	},
 	header: {
 		alignSelf: 'center',
 		fontSize: 40,
 		marginTop: 70
 	},
-	setColorToWhite: {
-		color: '#fff'
-	},
-	alignButtons: {
-		flexDirection: 'row'
-	},
 	button: {
-		backgroundColor: 'green',
-		height: 70,
-		width: '33.333%',
+		backgroundColor: '#eee',
+		height: 60,
+		width: '50%',
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignSelf: 'center',
+		alignItems: 'center',
+		borderRadius: 30
+	},
+	buttonText: {
+		color: 'dodgerblue'
 	}
 });
 
