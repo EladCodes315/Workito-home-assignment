@@ -11,9 +11,6 @@ function AddEmployeeScreen(){
 			Alert.alert('Missing Values', 'One or more of the fields is Empty');
 		}
 		else {
-			// else if () {
-
-			// }
 			db
 				.get()
 				.then(snapshot => {
@@ -31,6 +28,8 @@ function AddEmployeeScreen(){
 							})
 							.then(() => Alert.alert('Success', 'Employee added successfully!'))
 							.catch(() => Alert.alert('Error', 'Something went wrong'));
+						setName('');
+						setEmployeeId('');
 					}
 				})
 				.catch(() => Alert.alert('Error', 'Something went wrong when fetching data'));
@@ -80,7 +79,8 @@ const styles = StyleSheet.create({
 		backgroundColor: '#eee',
 		width: '100%',
 		height: 40,
-		borderRadius: 10
+		borderRadius: 10,
+		direction: 'ltr'
 	},
 	button: {
 		backgroundColor: '#eee',

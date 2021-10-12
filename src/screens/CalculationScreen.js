@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Picker, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { auth, db } from '../../firebase';
 import RadioButton from '../components/RadioButton';
+import * as formulaValues from '../../constants';
 
 function CalculationScreen(){
-	const [ employee, setEmployee ] = useState('');
+	const [ employee, setEmployee ] = useState({});
 	const [ employeesArr, setEmployeesArr ] = useState([]);
 	const [ veterancyStr, setVeterancyStr ] = useState('');
 	const [ hoursStr, setHoursStr ] = useState('');
@@ -13,13 +14,12 @@ function CalculationScreen(){
 
 	useEffect(() => {
 		const query = db.where('userId', '==', auth.currentUser.uid);
-
 		const observer = query.onSnapshot(
 			querySnapshot => {
 				let arr = [];
 				querySnapshot.docs.forEach(docSnapshot => {
 					if (docSnapshot.data().userId === auth.currentUser.uid) {
-						arr.push(docSnapshot.data().name);
+						arr.push(docSnapshot.data());
 					}
 				});
 				setEmployeesArr(arr);
@@ -28,21 +28,20 @@ function CalculationScreen(){
 				console.log(`Encountered error: ${err}`);
 			}
 		);
-
 		return observer;
-		// db
-		// 	.get()
-		// 	.then(snapshot => {
-		// 		let arr = [];
-		// 		snapshot.forEach(doc => {
-		// 			if (doc.data().userId === auth.currentUser.uid) {
-		// 				arr.push(doc.data().name);
-		// 			}
-		// 		});
-		// 		setEmployeesArr(arr);
-		// 	})
-		// 	.catch(err => console.log(err));
 	}, []);
+
+	const formula = (hours, desc, multiplier) => {
+		if (desc === 'permanant-weekly-hours') {
+			return multiplier * hours * formulaValues.recoveryDayValue / formulaValues.weeklyDivider;
+		}
+		else if (desc === 'permanant-monthly-hours') {
+			return multiplier * hours * formulaValues.recoveryDayValue / formulaValues.monthlyDivider;
+		}
+		else {
+			return multiplier * hours * formulaValues.recoveryDayValue / formulaValues.changingDivider;
+		}
+	};
 
 	const handleCalculation = () => {
 		if (employee === '' || veterancyStr === '' || hoursStr === '' || jobDescription === '') {
@@ -51,97 +50,30 @@ function CalculationScreen(){
 		else {
 			let veterancyNumber = parseInt(veterancyStr);
 			let HoursNumber = parseInt(hoursStr);
-			if (jobDescription === 'permanant-weekly-hours') {
-				if (veterancyNumber === 1) {
-					let recoveryDayPayment = 5 * HoursNumber * 378 / 42;
-					setCalculation(recoveryDayPayment);
-				}
-				else if (veterancyNumber >= 2 && veterancyNumber <= 3) {
-					let recoveryDayPayment = 6 * HoursNumber * 378 / 42;
-					setCalculation(recoveryDayPayment);
-				}
-				else if (veterancyNumber >= 4 && veterancyNumber <= 10) {
-					let recoveryDayPayment = 7 * HoursNumber * 378 / 42;
-					setCalculation(recoveryDayPayment);
-				}
-				else if (veterancyNumber >= 11 && veterancyNumber <= 15) {
-					let recoveryDayPayment = 8 * HoursNumber * 378 / 42;
-					setCalculation(recoveryDayPayment);
-				}
-				else if (veterancyNumber >= 16 && veterancyNumber <= 19) {
-					let recoveryDayPayment = 9 * HoursNumber * 378 / 42;
-					setCalculation(recoveryDayPayment);
-				}
-				else {
-					let recoveryDayPayment = 10 * HoursNumber * 378 / 42;
-					setCalculation(recoveryDayPayment);
+			let recoveryDayPayment = 0;
+			let i = 0;
+			while (i !== -1) {
+				i++;
+				if (veterancyNumber >= formulaValues.veterancyMultiplier[i][0] && veterancyNumber <= formulaValues.veterancyMultiplier[i][1]) {
+					recoveryDayPayment = formula(HoursNumber, jobDescription, formulaValues.veterancyMultiplier[i][2]);
+					i = -1;
 				}
 			}
-			else if (jobDescription === 'permanant-monthly-hours') {
-				if (veterancyNumber === 1) {
-					let recoveryDayPayment = 5 * HoursNumber * 378 / 182;
-					setCalculation(recoveryDayPayment);
-				}
-				else if (veterancyNumber >= 2 && veterancyNumber <= 3) {
-					let recoveryDayPayment = 6 * HoursNumber * 378 / 182;
-					setCalculation(recoveryDayPayment);
-				}
-				else if (veterancyNumber >= 4 && veterancyNumber <= 10) {
-					let recoveryDayPayment = 7 * HoursNumber * 378 / 182;
-					setCalculation(recoveryDayPayment);
-				}
-				else if (veterancyNumber >= 11 && veterancyNumber <= 15) {
-					let recoveryDayPayment = 8 * HoursNumber * 378 / 182;
-					setCalculation(recoveryDayPayment);
-				}
-				else if (veterancyNumber >= 16 && veterancyNumber <= 19) {
-					let recoveryDayPayment = 9 * HoursNumber * 378 / 182;
-					setCalculation(recoveryDayPayment);
-				}
-				else {
-					let recoveryDayPayment = 10 * HoursNumber * 378 / 182;
-					setCalculation(recoveryDayPayment);
-				}
-			}
-			else {
-				let avgMonthlyHours = HoursNumber / 12;
-				if (veterancyNumber === 1) {
-					let recoveryDayPayment = 5 * avgMonthlyHours * 378 / 182;
-					setCalculation(recoveryDayPayment);
-				}
-				else if (veterancyNumber >= 2 && veterancyNumber <= 3) {
-					let recoveryDayPayment = 6 * avgMonthlyHours * 378 / 182;
-					setCalculation(recoveryDayPayment);
-				}
-				else if (veterancyNumber >= 4 && veterancyNumber <= 10) {
-					let recoveryDayPayment = 7 * avgMonthlyHours * 378 / 182;
-					setCalculation(recoveryDayPayment);
-				}
-				else if (veterancyNumber >= 11 && veterancyNumber <= 15) {
-					let recoveryDayPayment = 8 * avgMonthlyHours * 378 / 182;
-					setCalculation(recoveryDayPayment);
-				}
-				else if (veterancyNumber >= 16 && veterancyNumber <= 19) {
-					let recoveryDayPayment = 9 * avgMonthlyHours * 378 / 182;
-					setCalculation(recoveryDayPayment);
-				}
-				else {
-					let recoveryDayPayment = 10 * avgMonthlyHours * 378 / 182;
-					setCalculation(recoveryDayPayment);
-				}
-			}
+			setCalculation(recoveryDayPayment);
+			setJobDescription('');
+			setHoursStr('');
+			setVeterancyStr('');
 		}
 	};
 
 	return (
 		<View style={styles.container}>
 			<Text style={styles.header}>Calculate</Text>
-
 			<View style={styles.inputs}>
 				<View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
 					<Text>Employee </Text>
 					<Picker selectedValue={employee} style={styles.picker} onValueChange={emp => setEmployee(emp)}>
-						{employeesArr.map((emp, index) => <Picker.Item key={index} label={emp} value={emp} />)}
+						{employeesArr.map((emp, index) => <Picker.Item key={index} label={emp.name} value={emp} />)}
 					</Picker>
 				</View>
 				<View>

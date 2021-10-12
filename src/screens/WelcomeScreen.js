@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { auth } from '../../firebase';
 
 function WelcomeScreen({ navigation }){
@@ -14,6 +14,7 @@ function WelcomeScreen({ navigation }){
 			<TouchableOpacity onPress={handleSignOut} style={styles.button}>
 				<Text style={styles.buttonText}>Logout</Text>
 			</TouchableOpacity>
+			<Image source={require('../assets/ImageInBottom.png')} style={styles.image} />
 		</View>
 	);
 }
@@ -40,6 +41,13 @@ const styles = StyleSheet.create({
 	},
 	buttonText: {
 		color: 'dodgerblue'
+	},
+	image: {
+		width: '90%',
+		alignSelf: 'center',
+		height: 60,
+		position: 'absolute',
+		bottom: 20
 	}
 });
 

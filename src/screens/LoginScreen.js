@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { auth } from '../../firebase';
 
 function LoginScreen({ navigation }){
@@ -20,6 +20,8 @@ function LoginScreen({ navigation }){
 			.signInWithEmailAndPassword(email, password)
 			.then(() => navigation.navigate('WelcomeNav'))
 			.catch(() => Alert.alert('Error', 'Something went wrong'));
+		setEmail('');
+		setPassword('');
 	};
 
 	return (
@@ -28,7 +30,7 @@ function LoginScreen({ navigation }){
 			<View style={styles.inputs}>
 				<View>
 					<Text>Email</Text>
-					<TextInput style={styles.inputBackground} value={email} onChangeText={text => setEmail(text)} />
+					<TextInput style={styles.inputBackground} keyboardType="email-address" value={email} onChangeText={text => setEmail(text)} />
 				</View>
 				<View>
 					<Text>Password</Text>
@@ -46,6 +48,7 @@ function LoginScreen({ navigation }){
 					<Text style={{ color: 'dodgerblue' }}>Sign In</Text>
 				</TouchableOpacity>
 			</View>
+			<Image source={require('../assets/ImageInBottom.png')} style={styles.image} />
 		</View>
 	);
 }
@@ -85,6 +88,13 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 		alignItems: 'center',
 		borderRadius: 30
+	},
+	image: {
+		width: '90%',
+		alignSelf: 'center',
+		height: 60,
+		position: 'absolute',
+		bottom: 10
 	}
 });
 

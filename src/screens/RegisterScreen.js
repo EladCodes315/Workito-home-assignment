@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { auth } from '../../firebase';
 
 function RegisterScreen({ navigation }){
@@ -11,6 +11,8 @@ function RegisterScreen({ navigation }){
 			.createUserWithEmailAndPassword(email, password)
 			.then(() => navigation.replace('Login'))
 			.catch(() => Alert.alert('Error', 'Something went wrong'));
+		setEmail('');
+		setPassword('');
 	};
 
 	return (
@@ -19,7 +21,7 @@ function RegisterScreen({ navigation }){
 			<View style={styles.inputs}>
 				<View>
 					<Text style>Email</Text>
-					<TextInput style={styles.inputBackground} value={email} onChangeText={text => setEmail(text)} />
+					<TextInput style={styles.inputBackground} keyboardType="email-address" value={email} onChangeText={text => setEmail(text)} />
 				</View>
 				<View>
 					<Text>Password</Text>
@@ -37,6 +39,7 @@ function RegisterScreen({ navigation }){
 					<Text style={{ color: 'dodgerblue' }}>Sign Up</Text>
 				</TouchableOpacity>
 			</View>
+			<Image source={require('../assets/ImageInBottom.png')} style={styles.image} />
 		</View>
 	);
 }
@@ -76,6 +79,13 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 		alignItems: 'center',
 		borderRadius: 30
+	},
+	image: {
+		width: '90%',
+		alignSelf: 'center',
+		height: 60,
+		position: 'absolute',
+		bottom: 10
 	}
 });
 
